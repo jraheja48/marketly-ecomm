@@ -4,6 +4,7 @@ import { Login } from './pages/login/login';
 import { ProductList } from './pages/product-list/product-list';
 import { ProductDetails } from './pages/product-details/product-details';
 import { MyOrders } from './pages/my-orders/my-orders';
+import { Checkout } from './pages/checkout/checkout';
 
 export const routes: Routes = [
   {
@@ -30,5 +31,9 @@ export const routes: Routes = [
   {
     path: 'my-orders',
     component: MyOrders,
+  },
+  {
+    path: 'checkout',
+    component: Checkout,
   },
 ];

@@ -1,0 +1,210 @@
+:host {
+  display: block;
+}
+
+.app-navbar {
+  background-color: var(--color-surface-elevated);
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(8px);
+  height: 64px;
+
+  .navbar-brand {
+    color: var(--color-text);
+    font-size: 1.25rem;
+
+    i {
+      color: var(--color-accent);
+    }
+  }
+}
+
+.search-form {
+  max-width: 640px;
+}
+
+.search-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px 0 40px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(var(--color-accent-rgb), 0.15);
+  }
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  // Remove the native search-field decorations so it matches our own icon/clear styling.
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button {
+    display: none;
+  }
+}
+
+.btn-icon-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: var(--color-text);
+  }
+}
+
+.app-dropdown {
+  background-color: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+
+  .dropdown-item {
+    color: var(--color-text-muted);
+    background: transparent;
+
+    &:hover,
+    &:focus {
+      background-color: rgba(var(--color-accent-rgb), 0.08);
+      color: var(--color-text);
+    }
+
+    &.active {
+      background: transparent;
+      color: var(--color-accent);
+    }
+  }
+}
+
+.app-main {
+  display: block;
+  padding-top: 64px;
+  min-height: 100dvh;
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.cart-badge {
+  background-color: var(--color-accent);
+  color: #141416;
+  font-size: 0.65rem;
+  padding: 0.25em 0.45em;
+}
+
+.app-offcanvas {
+  background-color: var(--color-surface-elevated);
+  color: var(--color-text);
+  border-color: var(--color-border);
+
+  .offcanvas-header {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .nav-link {
+    color: var(--color-text-muted);
+    padding: 0.5rem 0;
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
+
+  .active-link {
+    color: var(--color-accent);
+  }
+}
+
+.cart-thumb {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  border-radius: 8px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.cart-line {
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.qty-stepper {
+  .btn-step {
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text);
+    border-radius: 4px;
+    line-height: 1;
+  }
+}
+
+.theme-label {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.theme-pill {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.6rem 0.5rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+.theme-pill-active {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}

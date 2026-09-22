@@ -1,1 +1,50 @@
-<p>home works!</p>
+<section class="hero d-flex align-items-center">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 text-center text-lg-start">
+        <h1 class="fw-bold mb-3">Shop the latest drops</h1>
+        <p class="text-muted mb-4">
+          Curated essentials across electronics, fashion, and home &mdash; refreshed weekly.
+        </p>
+        <a routerLink="/products" class="btn btn-accent btn-lg px-4">Shop Now</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container category-strip">
+  <div class="d-flex gap-3 flex-nowrap overflow-auto pb-2">
+    @for (category of categories; track category.label) {
+      <button type="button" class="category-chip d-flex align-items-center gap-2">
+        <i class="bi {{ category.icon }}"></i>
+        <span>{{ category.label }}</span>
+      </button>
+    }
+  </div>
+</section>
+
+<section class="container featured-section">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 fw-semibold mb-0">Featured Products</h2>
+    <a routerLink="/products" class="view-all-link">
+      View All <i class="bi bi-chevron-right"></i>
+    </a>
+  </div>
+
+  <div class="product-grid">
+    @for (product of featuredProducts; track product.id) {
+      <div class="product-card">
+        <div class="product-image d-flex align-items-center justify-content-center">
+          <i class="bi bi-image fs-2 text-muted"></i>
+          <button type="button" class="quick-add-btn" aria-label="Add to cart">
+            <i class="bi bi-cart-plus"></i>
+          </button>
+        </div>
+        <div class="product-info">
+          <div class="product-name text-truncate">{{ product.name }}</div>
+          <div class="product-price">${{ product.price }}</div>
+        </div>
+      </div>
+    }
+  </div>
+</section>

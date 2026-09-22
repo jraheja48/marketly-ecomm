@@ -1,1 +1,66 @@
-<p>product-list works!</p>
+<div class="container product-list-page">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <span class="text-muted small">{{ products.length }} products</span>
+
+    <div class="d-flex gap-2">
+      <button type="button" class="btn btn-sort d-lg-none" (click)="toggleFilters()">
+        <i class="bi bi-sliders me-1"></i>Filters
+      </button>
+      <select class="form-select app-select sort-select">
+        <option>Popularity</option>
+        <option>Price: Low to High</option>
+        <option>Price: High to Low</option>
+        <option>Newest</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="product-list-layout">
+    <aside class="filter-rail" [class.filter-rail-open]="filtersOpen()">
+      <div class="d-flex justify-content-between align-items-center d-lg-none mb-3">
+        <span class="fw-semibold">Filters</span>
+        <button type="button" class="btn-close btn-close-white" (click)="toggleFilters()"></button>
+      </div>
+
+      <div class="filter-section">
+        <h3 class="filter-title">Category</h3>
+        @for (category of categories; track category) {
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" [id]="category" />
+            <label class="form-check-label" [for]="category">{{ category }}</label>
+          </div>
+        }
+      </div>
+
+      <div class="filter-section">
+        <h3 class="filter-title">Price Range</h3>
+        <div class="d-flex gap-2 align-items-center">
+          <input type="number" class="form-control app-input" placeholder="Min" />
+          <span class="text-muted">-</span>
+          <input type="number" class="form-control app-input" placeholder="Max" />
+        </div>
+      </div>
+    </aside>
+
+    <div class="product-grid">
+      @for (product of products; track product.id) {
+        <div class="product-card">
+          <div class="product-image d-flex align-items-center justify-content-center">
+            <i class="bi bi-image fs-2 text-muted"></i>
+            <button type="button" class="quick-add-btn" aria-label="Add to cart">
+              <i class="bi bi-cart-plus"></i>
+            </button>
+          </div>
+          <div class="product-info">
+            <div class="product-name text-truncate">{{ product.name }}</div>
+            <div class="product-price">${{ product.price }}</div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="text-center mt-4 mb-5">
+    <button type="button" class="btn btn-outline-accent px-4">Load More</button>
+  </div>
+</div>

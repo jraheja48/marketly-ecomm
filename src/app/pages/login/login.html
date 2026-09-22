@@ -1,1 +1,40 @@
-<p>login works!</p>
+<div class="login-page d-flex align-items-center justify-content-center">
+  <div class="login-card">
+    <h1 class="h4 fw-semibold mb-1">Welcome back</h1>
+    <p class="text-muted small mb-4">Log in to continue shopping.</p>
+
+    <form>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" class="form-control app-input" placeholder="you@example.com" />
+      </div>
+
+      <div class="mb-2">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <input type="password" id="password" class="form-control app-input" placeholder="••••••••" />
+          <button type="button" class="btn btn-icon-inline" aria-label="Show password">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="text-end mb-4">
+        <a href="#" class="forgot-link small">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn btn-accent w-100 mb-3">Log In</button>
+
+      <div class="divider-text my-3">
+        <span>or</span>
+      </div>
+
+      <button type="button" class="btn btn-outline-accent w-100 mb-4">Continue as Guest</button>
+
+      <p class="text-center text-muted small mb-0">
+        Don't have an account?
+        <a href="#" class="signup-link">Sign up</a>
+      </p>
+    </form>
+  </div>
+</div>
