@@ -15,10 +15,10 @@
 <section class="container category-strip">
   <div class="d-flex gap-3 flex-nowrap overflow-auto pb-2">
     @for (category of categories; track category.label) {
-      <button type="button" class="category-chip d-flex align-items-center gap-2">
-        <i class="bi {{ category.icon }}"></i>
-        <span>{{ category.label }}</span>
-      </button>
+    <button type="button" class="category-chip d-flex align-items-center gap-2">
+      <i class="bi {{ category.icon }}"></i>
+      <span>{{ category.label }}</span>
+    </button>
     }
   </div>
 </section>
@@ -32,19 +32,28 @@
   </div>
 
   <div class="product-grid">
-    @for (product of featuredProducts; track product.id) {
-      <div class="product-card">
-        <div class="product-image d-flex align-items-center justify-content-center">
-          <i class="bi bi-image fs-2 text-muted"></i>
-          <button type="button" class="quick-add-btn" aria-label="Add to cart">
-            <i class="bi bi-cart-plus"></i>
-          </button>
-        </div>
-        <div class="product-info">
-          <div class="product-name text-truncate">{{ product.name }}</div>
-          <div class="product-price">${{ product.price }}</div>
-        </div>
+    @for (product of featuredProducts(); track $index) {
+    <a [routerLink]="['/open-product', product.productId]" class="product-card">
+      <div class="product-image d-flex align-items-center justify-content-center">
+        @if (product.productImageUrl?.length > 0) {
+        <img [src]="product.productImageUrl" alt="{{ product.productName }}" class="img-fluid" />
+        }
+        @else {
+        <i class="bi bi-image fs-2 text-muted"></i>
+
+        }
+        <button type="button" class="quick-add-btn" aria-label="Add to cart"
+          (click)="$event.stopPropagation(); $event.preventDefault()">
+          <i class="bi bi-cart-plus"></i>
+        </button>
       </div>
+      <div class="product-info">
+        <div class="product-name text-truncate">{{ product.productName }}</div>
+        <div class="product-price">${{ product.productPrice }}</div>
+      </div>
+    </a>
     }
+
+
   </div>
 </section>

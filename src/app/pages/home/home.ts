@@ -1,11 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-
-interface FeaturedProduct {
-  id: number;
-  name: string;
-  price: number;
-}
+import { Product } from '@src/app/services/product';
+import { IProduct } from '@src/app/models/product-model';
 
 @Component({
   imports: [RouterLink],
@@ -13,7 +9,10 @@ interface FeaturedProduct {
   styleUrl: './home.scss',
   templateUrl: './home.html',
 })
-export class Home {
+export class Home implements OnInit {
+  public productService = inject(Product);
+  public featuredProducts = signal<IProduct[]>([]);
+
   protected readonly categories = [
     { label: 'All', icon: 'bi-box-seam' },
     { label: 'Electronics', icon: 'bi-laptop' },
@@ -23,14 +22,15 @@ export class Home {
     { label: 'Sports', icon: 'bi-dribbble' },
   ];
 
-  protected readonly featuredProducts: FeaturedProduct[] = [
-    { id: 1, name: 'Wireless Headphones', price: 79 },
-    { id: 2, name: 'Canvas Backpack', price: 45 },
-    { id: 3, name: 'Smart Watch', price: 129 },
-    { id: 4, name: 'Ceramic Mug Set', price: 24 },
-    { id: 5, name: 'Running Shoes', price: 89 },
-    { id: 6, name: 'Desk Lamp', price: 35 },
-    { id: 7, name: 'Sunglasses', price: 55 },
-    { id: 8, name: 'Yoga Mat', price: 30 },
-  ];
+  ngOnInit() {
+    this.productService.getAllProducts().subscribe({
+      next: (response) => {
+        console.log('Products fetched successfully:', response);
+        this.featuredProducts.set(response.data);
+      },
+      error: (error) => {
+        console.error('Error fetching products:', error);
+      },
+    });
+  }
 }

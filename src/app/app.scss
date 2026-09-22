@@ -101,9 +101,17 @@
 }
 
 .app-main {
-  display: block;
+  display: flex;
+  flex-direction: column;
   padding-top: 64px;
   min-height: 100dvh;
+}
+
+// Grows to fill any leftover space so the footer is pushed to the bottom
+// of the viewport on short pages (e.g. My Orders with only a couple of
+// entries), instead of trailing right after the content.
+.app-content {
+  flex: 1 0 auto;
 }
 
 .btn-icon {

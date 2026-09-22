@@ -1,14 +1,8 @@
 <nav class="navbar navbar-expand-lg fixed-top app-navbar">
   <div class="container-fluid px-3 px-lg-4 flex-nowrap gap-2 gap-lg-3">
     <div class="d-flex align-items-center gap-2 flex-shrink-0">
-      <button
-        class="navbar-toggler border-0 d-lg-none"
-        type="button"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#navMenu"
-        aria-controls="navMenu"
-        aria-label="Toggle navigation"
-      >
+      <button class="navbar-toggler border-0 d-lg-none" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#navMenu" aria-controls="navMenu" aria-label="Toggle navigation">
         <i class="bi bi-shop-window fs-3 text-light"></i>
       </button>
 
@@ -18,59 +12,42 @@
       </a>
     </div>
 
-    <form
-      class="search-form flex-grow-1 d-none d-md-block"
-      (submit)="$event.preventDefault(); onSearchSubmit()"
-    >
+    <form class="search-form flex-grow-1 d-none d-md-block" (submit)="$event.preventDefault(); onSearchSubmit()">
       <div class="search-input-wrap">
         <i class="bi bi-search search-icon"></i>
-        <input
-          type="search"
-          class="search-input"
-          placeholder="Search products, brands and categories"
-          [value]="searchTerm()"
-          (input)="searchTerm.set($any($event.target).value)"
-        />
+        <input type="search" class="search-input" placeholder="Search products, brands and categories"
+          [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
       </div>
     </form>
 
     <div class="d-flex align-items-center gap-1 gap-lg-2 flex-shrink-0">
       <div class="dropdown">
-        <button
-          type="button"
-          class="btn btn-icon"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-          aria-label="Choose theme"
-        >
+        <button type="button" class="btn btn-icon" data-bs-toggle="dropdown" aria-expanded="false"
+          aria-label="Choose theme">
           @switch (theme.preference()) {
-            @case ('light') {
-              <i class="bi bi-sun fs-5"></i>
-            }
-            @case ('dark') {
-              <i class="bi bi-moon-stars fs-5"></i>
-            }
-            @default {
-              <i class="bi bi-circle-half fs-5"></i>
-            }
+          @case ('light') {
+          <i class="bi bi-sun fs-5"></i>
+          }
+          @case ('dark') {
+          <i class="bi bi-moon-stars fs-5"></i>
+          }
+          @default {
+          <i class="bi bi-circle-half fs-5"></i>
+          }
           }
         </button>
         <ul class="dropdown-menu dropdown-menu-end app-dropdown">
           @for (option of themeOptions; track option.value) {
-            <li>
-              <button
-                type="button"
-                class="dropdown-item d-flex align-items-center gap-2"
-                [class.active]="theme.preference() === option.value"
-                (click)="setTheme(option.value)"
-              >
-                <i class="bi {{ option.icon }}"></i>
-                <span>{{ option.label }}</span>
-                @if (theme.preference() === option.value) {
-                  <i class="bi bi-check2 ms-auto"></i>
-                }
-              </button>
-            </li>
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center gap-2"
+              [class.active]="theme.preference() === option.value" (click)="setTheme(option.value)">
+              <i class="bi {{ option.icon }}"></i>
+              <span>{{ option.label }}</span>
+              @if (theme.preference() === option.value) {
+              <i class="bi bi-check2 ms-auto"></i>
+              }
+            </button>
+          </li>
           }
         </ul>
       </div>
@@ -85,21 +62,18 @@
         <span>Login</span>
       </a>
 
-      <button
-        type="button"
-        class="btn btn-icon position-relative"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#cartDrawer"
-        aria-controls="cartDrawer"
-        aria-label="Open cart"
-      >
+      <button type="button" class="btn btn-icon position-relative" data-bs-toggle="offcanvas"
+        data-bs-target="#cartDrawer" aria-controls="cartDrawer" aria-label="Open cart">
         <i class="bi bi-cart3 fs-5"></i>
         @if (cartItemCount() > 0) {
-          <span
+        <!-- <span
             class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge"
           >
-            {{ cartItemCount() }}
-          </span>
+          </span> -->
+        <span class="position-absolute top-25 start-50 translate-right badge rounded-pill bg-danger">
+          {{ cartItemCount() }}
+          <span class="visually-hidden">unread messages</span>
+        </span>
         }
       </button>
     </div>
@@ -116,44 +90,24 @@
     <form class="search-form mb-3 d-md-none" (submit)="$event.preventDefault(); onSearchSubmit()">
       <div class="search-input-wrap">
         <i class="bi bi-search search-icon"></i>
-        <input
-          type="search"
-          class="search-input"
-          placeholder="Search products, brands and categories"
-          [value]="searchTerm()"
-          (input)="searchTerm.set($any($event.target).value)"
-        />
+        <input type="search" class="search-input" placeholder="Search products, brands and categories"
+          [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" />
       </div>
     </form>
 
     <ul class="navbar-nav gap-2">
       <li class="nav-item">
-        <a
-          class="nav-link"
-          routerLink="/home"
-          routerLinkActive="active-link"
-          data-bs-dismiss="offcanvas"
-        >
+        <a class="nav-link" routerLink="/home" routerLinkActive="active-link" data-bs-dismiss="offcanvas">
           <i class="bi bi-house me-2"></i>Home
         </a>
       </li>
       <li class="nav-item">
-        <a
-          class="nav-link"
-          routerLink="/products"
-          routerLinkActive="active-link"
-          data-bs-dismiss="offcanvas"
-        >
+        <a class="nav-link" routerLink="/products" routerLinkActive="active-link" data-bs-dismiss="offcanvas">
           <i class="bi bi-grid me-2"></i>Products
         </a>
       </li>
       <li class="nav-item">
-        <a
-          class="nav-link"
-          routerLink="/my-orders"
-          routerLinkActive="active-link"
-          data-bs-dismiss="offcanvas"
-        >
+        <a class="nav-link" routerLink="/my-orders" routerLinkActive="active-link" data-bs-dismiss="offcanvas">
           <i class="bi bi-bag-check me-2"></i>My Orders
         </a>
       </li>
@@ -168,15 +122,11 @@
       <div class="theme-label mb-2">Theme</div>
       <div class="d-flex gap-2">
         @for (option of themeOptions; track option.value) {
-          <button
-            type="button"
-            class="theme-pill"
-            [class.theme-pill-active]="theme.preference() === option.value"
-            (click)="setTheme(option.value)"
-          >
-            <i class="bi {{ option.icon }}"></i>
-            <span>{{ option.label }}</span>
-          </button>
+        <button type="button" class="theme-pill" [class.theme-pill-active]="theme.preference() === option.value"
+          (click)="setTheme(option.value)">
+          <i class="bi {{ option.icon }}"></i>
+          <span>{{ option.label }}</span>
+        </button>
         }
       </div>
     </div>
@@ -191,61 +141,61 @@
   </div>
   <div class="offcanvas-body d-flex flex-column">
     @if (cartItems().length > 0) {
-      <div class="flex-grow-1 overflow-auto d-flex flex-column gap-3">
-        @for (item of cartItems(); track item.id) {
-          <div class="d-flex align-items-center gap-3 cart-line">
-            <div class="cart-thumb d-flex align-items-center justify-content-center">
-              <i class="bi bi-image text-muted"></i>
-            </div>
-            <div class="flex-grow-1">
-              <div class="fw-medium">{{ item.name }}</div>
-              <div class="text-muted small">${{ item.price }}</div>
-              <div class="d-flex align-items-center gap-2 mt-1 qty-stepper">
-                <button type="button" class="btn-step">−</button>
-                <span>{{ item.qty }}</span>
-                <button type="button" class="btn-step">+</button>
-              </div>
-            </div>
-            <div class="text-end">
-              <div class="fw-semibold">${{ item.price * item.qty }}</div>
-              <button type="button" class="btn btn-link btn-sm text-danger p-0 mt-1">
-                <i class="bi bi-trash"></i>
-              </button>
-            </div>
-          </div>
-        }
-      </div>
-
-      <div class="border-top pt-3 mt-3">
-        <div class="d-flex justify-content-between mb-1">
-          <span class="text-muted">Subtotal</span>
-          <span class="fw-semibold">${{ cartSubtotal() }}</span>
+    <div class="flex-grow-1 overflow-auto d-flex flex-column gap-3">
+      @for (item of cartItems(); track item.id) {
+      <div class="d-flex align-items-center gap-3 cart-line">
+        <div class="cart-thumb d-flex align-items-center justify-content-center">
+          <i class="bi bi-image text-muted"></i>
         </div>
-        <p class="text-muted small mb-3">Taxes &amp; shipping calculated at checkout.</p>
-        <a routerLink="/checkout" class="btn btn-accent w-100 mb-2" data-bs-dismiss="offcanvas">
-          Go to Checkout
-        </a>
-        <button type="button" class="btn btn-link w-100 text-muted" data-bs-dismiss="offcanvas">
-          Continue Shopping
-        </button>
+        <div class="flex-grow-1">
+          <div class="fw-medium">{{ item.name }}</div>
+          <div class="text-muted small">${{ item.price }}</div>
+          <div class="d-flex align-items-center gap-2 mt-1 qty-stepper">
+            <button type="button" class="btn-step">−</button>
+            <span>{{ item.qty }}</span>
+            <button type="button" class="btn-step">+</button>
+          </div>
+        </div>
+        <div class="text-end">
+          <div class="fw-semibold">${{ item.price * item.qty }}</div>
+          <button type="button" class="btn btn-link btn-sm text-danger p-0 mt-1">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
       </div>
+      }
+    </div>
+
+    <div class="border-top pt-3 mt-3">
+      <div class="d-flex justify-content-between mb-1">
+        <span class="text-muted">Subtotal</span>
+        <span class="fw-semibold">${{ cartSubtotal() }}</span>
+      </div>
+      <p class="text-muted small mb-3">Taxes &amp; shipping calculated at checkout.</p>
+      <a routerLink="/checkout" class="btn btn-accent w-100 mb-2" data-bs-dismiss="offcanvas">
+        Go to Checkout
+      </a>
+      <button type="button" class="btn btn-link w-100 text-muted" data-bs-dismiss="offcanvas">
+        Continue Shopping
+      </button>
+    </div>
     } @else {
-      <div
-        class="flex-grow-1 d-flex flex-column align-items-center justify-content-center text-center gap-3"
-      >
-        <i class="bi bi-cart-x fs-1 text-muted"></i>
-        <p class="text-muted mb-0">Your cart is empty</p>
-        <a routerLink="/products" class="btn btn-outline-accent btn-sm" data-bs-dismiss="offcanvas">
-          Start Shopping
-        </a>
-      </div>
+    <div class="flex-grow-1 d-flex flex-column align-items-center justify-content-center text-center gap-3">
+      <i class="bi bi-cart-x fs-1 text-muted"></i>
+      <p class="text-muted mb-0">Your cart is empty</p>
+      <a routerLink="/products" class="btn btn-outline-accent btn-sm" data-bs-dismiss="offcanvas">
+        Start Shopping
+      </a>
+    </div>
     }
   </div>
 </div>
 
 <main class="app-main">
-  <router-outlet />
+  <div class="app-content">
+    <router-outlet />
+  </div>
   @if (showFooter()) {
-    <app-footer />
+  <app-footer />
   }
 </main>

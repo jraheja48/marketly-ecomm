@@ -1,32 +1,72 @@
 <div class="container product-list-page">
+  <nav class="breadcrumb-row small mb-2">
+    <a routerLink="/home" class="breadcrumb-link">Home</a>
+    <span class="mx-1">/</span>
+    <span>Products</span>
+  </nav>
+  <h1 class="h3 fw-bold mb-4">All Products</h1>
+
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <span class="text-muted small">{{ products.length }} products</span>
+    <span class="text-muted small">
+      Showing <strong class="text-body">1&ndash;{{ products.length }}</strong> of
+      <strong class="text-body">{{ products.length }}</strong> results
+    </span>
 
     <div class="d-flex gap-2">
       <button type="button" class="btn btn-sort d-lg-none" (click)="toggleFilters()">
         <i class="bi bi-sliders me-1"></i>Filters
       </button>
-      <select class="form-select app-select sort-select">
-        <option>Popularity</option>
-        <option>Price: Low to High</option>
-        <option>Price: High to Low</option>
-        <option>Newest</option>
-      </select>
+
+      <div class="dropdown">
+        <button type="button" class="btn sort-btn" (click)="toggleSortMenu()">
+          Sort: {{ sortBy() }}
+          <i class="bi bi-chevron-down ms-1"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end app-dropdown" [class.show]="sortMenuOpen()">
+          @for (option of sortOptions; track option) {
+            <li>
+              <button
+                type="button"
+                class="dropdown-item"
+                [class.active]="sortBy() === option"
+                (click)="chooseSort(option)"
+              >
+                {{ option }}
+              </button>
+            </li>
+          }
+        </ul>
+      </div>
     </div>
   </div>
 
   <div class="product-list-layout">
     <aside class="filter-rail" [class.filter-rail-open]="filtersOpen()">
-      <div class="d-flex justify-content-between align-items-center d-lg-none mb-3">
-        <span class="fw-semibold">Filters</span>
-        <button type="button" class="btn-close btn-close-white" (click)="toggleFilters()"></button>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="fw-semibold d-flex align-items-center gap-2">
+          <i class="bi bi-sliders"></i>Filters
+        </span>
+        <div class="d-flex align-items-center gap-2">
+          <button type="button" class="reset-link" (click)="resetFilters()">Reset</button>
+          <button
+            type="button"
+            class="btn-close btn-close-white d-lg-none"
+            (click)="toggleFilters()"
+          ></button>
+        </div>
       </div>
 
       <div class="filter-section">
         <h3 class="filter-title">Category</h3>
         @for (category of categories; track category) {
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" [id]="category" />
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [id]="category"
+              [checked]="selectedCategories().has(category)"
+              (change)="toggleCategory(category)"
+            />
             <label class="form-check-label" [for]="category">{{ category }}</label>
           </div>
         }
@@ -34,10 +74,36 @@
 
       <div class="filter-section">
         <h3 class="filter-title">Price Range</h3>
-        <div class="d-flex gap-2 align-items-center">
-          <input type="number" class="form-control app-input" placeholder="Min" />
-          <span class="text-muted">-</span>
-          <input type="number" class="form-control app-input" placeholder="Max" />
+        <input
+          type="range"
+          class="price-slider"
+          [min]="priceMin"
+          [max]="priceMax"
+          [value]="priceLimit()"
+          (input)="priceLimit.set($any($event.target).valueAsNumber)"
+        />
+        <div class="d-flex justify-content-between price-labels">
+          <span>${{ priceMin }}</span>
+          <span>${{ priceMax }}</span>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <h3 class="filter-title">Rating</h3>
+        <div class="form-check rating-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="rating-4"
+            [checked]="minRating() === 4"
+            (change)="toggleRating(4)"
+          />
+          <label class="form-check-label d-flex align-items-center gap-1" for="rating-4">
+            @for (star of stars; track star) {
+              <i class="bi bi-star-fill rating-star"></i>
+            }
+            <span class="ms-1">&amp; up</span>
+          </label>
         </div>
       </div>
     </aside>
@@ -47,20 +113,55 @@
         <div class="product-card">
           <div class="product-image d-flex align-items-center justify-content-center">
             <i class="bi bi-image fs-2 text-muted"></i>
-            <button type="button" class="quick-add-btn" aria-label="Add to cart">
-              <i class="bi bi-cart-plus"></i>
-            </button>
           </div>
           <div class="product-info">
             <div class="product-name text-truncate">{{ product.name }}</div>
-            <div class="product-price">${{ product.price }}</div>
+            <div class="product-category text-muted small mb-2">{{ product.category }}</div>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="product-price">${{ product.price.toFixed(2) }}</div>
+              <button type="button" class="btn-add">
+                <i class="bi bi-plus-lg"></i>Add
+              </button>
+            </div>
           </div>
         </div>
       }
     </div>
   </div>
 
-  <div class="text-center mt-4 mb-5">
-    <button type="button" class="btn btn-outline-accent px-4">Load More</button>
-  </div>
+  <nav class="pagination-row mt-4 mb-5" aria-label="Product pages">
+    <button
+      type="button"
+      class="page-btn page-nav"
+      [disabled]="currentPage() === 1"
+      (click)="goToPage(currentPage() - 1)"
+      aria-label="Previous page"
+    >
+      <i class="bi bi-chevron-left"></i>
+    </button>
+
+    @for (page of pageNumbers(); track page) {
+      @if ($index > 0 && page - pageNumbers()[$index - 1] > 1) {
+        <span class="page-ellipsis">&hellip;</span>
+      }
+      <button
+        type="button"
+        class="page-btn"
+        [class.page-btn-active]="currentPage() === page"
+        (click)="goToPage(page)"
+      >
+        {{ page }}
+      </button>
+    }
+
+    <button
+      type="button"
+      class="page-btn page-nav"
+      [disabled]="currentPage() === totalPages"
+      (click)="goToPage(currentPage() + 1)"
+      aria-label="Next page"
+    >
+      <i class="bi bi-chevron-right"></i>
+    </button>
+  </nav>
 </div>

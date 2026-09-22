@@ -2,6 +2,18 @@
   padding-top: 1.5rem;
 }
 
+.breadcrumb-row {
+  color: var(--color-text-muted);
+}
+
+.breadcrumb-link {
+  color: var(--color-text-muted);
+
+  &:hover {
+    color: var(--color-accent);
+  }
+}
+
 .app-select,
 .app-input {
   background-color: var(--color-surface);
@@ -16,14 +28,22 @@
   }
 }
 
-.sort-select {
-  width: auto;
-}
-
 .btn-sort {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   color: var(--color-text);
+}
+
+.sort-btn {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 0.9rem;
+}
+
+.app-dropdown .dropdown-item.active {
+  background: transparent;
+  color: var(--color-accent);
 }
 
 .product-list-layout {
@@ -33,30 +53,106 @@
 }
 
 .filter-rail {
-  flex: 0 0 240px;
+  flex: 0 0 260px;
   position: sticky;
   top: 80px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.reset-link {
+  background: transparent;
+  border: none;
+  color: var(--color-accent);
+  font-size: 0.85rem;
+  padding: 0;
 }
 
 .filter-section {
   margin-bottom: 1.5rem;
 
+  &:last-child {
+    margin-bottom: 0;
+  }
+
   .form-check-label {
     color: var(--color-text-muted);
+  }
+
+  // Bootstrap's compiled checkbox styles hardcode its default blue as a
+  // literal hex value (not a CSS var), so it doesn't pick up --bs-primary —
+  // override explicitly to match the accent palette.
+  .form-check-input {
+    background-color: var(--color-bg);
+    border-color: var(--color-border);
+
+    &:checked {
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(var(--color-accent-rgb), 0.2);
+    }
   }
 }
 
 .filter-title {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
   margin-bottom: 0.75rem;
+}
+
+.price-slider {
+  width: 100%;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-border);
+  outline: none;
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    cursor: pointer;
+    border: 2px solid var(--color-surface);
+  }
+
+  &::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    cursor: pointer;
+    border: 2px solid var(--color-surface);
+  }
+}
+
+.price-labels {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.rating-check {
+  .rating-star {
+    color: var(--color-accent);
+    font-size: 0.85rem;
+  }
 }
 
 .product-grid {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
@@ -67,38 +163,76 @@
   overflow: hidden;
 
   .product-image {
-    position: relative;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 16 / 11;
     background-color: var(--color-surface-elevated);
   }
 
-  .quick-add-btn {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: none;
-    background-color: var(--color-accent);
-    color: #141416;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
   .product-info {
-    padding: 0.75rem 1rem 1rem;
+    padding: 1rem;
   }
 
   .product-name {
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .product-price {
-    font-weight: 600;
-    margin-top: 0.25rem;
+    font-weight: 700;
+    font-size: 1.05rem;
   }
+}
+
+.btn-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background-color: var(--color-accent);
+  color: #141416;
+  border: none;
+  border-radius: 8px;
+  padding: 0.35rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-accent) 85%, white);
+  }
+}
+
+.pagination-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.page-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+
+  &:disabled {
+    opacity: 0.4;
+  }
+}
+
+.page-btn-active {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #141416;
+  font-weight: 600;
+}
+
+.page-nav {
+  color: var(--color-text-muted);
+}
+
+.page-ellipsis {
+  color: var(--color-text-muted);
+  padding: 0 0.25rem;
 }
 
 @media (max-width: 991px) {
@@ -108,8 +242,7 @@
     left: 0;
     height: 100dvh;
     width: 280px;
-    background-color: var(--color-surface-elevated);
-    padding: 1.5rem;
+    border-radius: 0;
     z-index: 1050;
     transform: translateX(-100%);
     transition: transform 0.25s ease;
