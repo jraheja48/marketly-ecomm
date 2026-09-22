@@ -34,6 +34,17 @@
       color: var(--color-accent);
     }
   }
+
+  .category-chip-active {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #141416;
+    font-weight: 600;
+
+    &:hover {
+      color: #141416;
+    }
+  }
 }
 
 .featured-section {
@@ -51,6 +62,29 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.empty-state-icon {
+  font-size: 2.5rem;
+  color: var(--color-text-muted);
+}
+
+.empty-state-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
 }
 
 .product-card {

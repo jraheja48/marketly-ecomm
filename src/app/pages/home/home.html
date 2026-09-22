@@ -14,10 +14,11 @@
 
 <section class="container category-strip">
   <div class="d-flex gap-3 flex-nowrap overflow-auto pb-2">
-    @for (category of categories; track category.label) {
-    <button type="button" class="category-chip d-flex align-items-center gap-2">
-      <i class="bi {{ category.icon }}"></i>
-      <span>{{ category.label }}</span>
+    @for (category of $categoriesList | async; track category.categoryId) {
+    <button type="button" class="category-chip d-flex align-items-center gap-2"
+      [class.category-chip-active]="selectedCategoryId() === category.categoryId"
+      (click)="filterProduct(category.categoryId)">
+      <span>{{ category.categoryName }}</span>
     </button>
     }
   </div>
@@ -52,8 +53,11 @@
         <div class="product-price">${{ product.productPrice }}</div>
       </div>
     </a>
+    } @empty {
+    <div class="empty-state">
+      <i class="bi bi-box-seam empty-state-icon"></i>
+      <p class="empty-state-text">No products available in this category.</p>
+    </div>
     }
-
-
   </div>
 </section>
