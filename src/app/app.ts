@@ -4,6 +4,10 @@ import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } fro
 import { filter, map } from 'rxjs';
 import { Footer } from './shared/footer/footer';
 import { Theme, ThemePreference } from './core/theme';
+import { IRegisterModel } from './models/user-model';
+import { Constants } from './constants/Constanct';
+import { UserService } from './services/user-service';
+import { AvatarTransformPipe } from './pipes/avatar-transform-pipe';
 
 interface CartLineItem {
   id: number;
@@ -15,7 +19,7 @@ interface CartLineItem {
 const FOOTERLESS_ROUTES = ['/login', '/checkout'];
 
 @Component({
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, Footer],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, Footer, AvatarTransformPipe],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',
@@ -23,6 +27,9 @@ const FOOTERLESS_ROUTES = ['/login', '/checkout'];
 export class App {
   protected readonly theme = inject(Theme);
   private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
+
+  public loggedUserData!: IRegisterModel | undefined;
 
   protected readonly searchTerm = signal('');
 
@@ -56,6 +63,26 @@ export class App {
     { value: 'dark', label: 'Dark', icon: 'bi-moon-stars' },
     { value: 'system', label: 'System', icon: 'bi-circle-half' },
   ];
+
+  constructor() {
+    this.readLoggedData();
+    this.userService.onLogin$.subscribe(() => {
+      this.readLoggedData();
+    });
+  }
+
+  protected readLoggedData(): void {
+    const loggedUserData = localStorage.getItem(Constants.LOGIN_STORAGE_KEY);
+    if (loggedUserData) {
+      this.loggedUserData = JSON.parse(loggedUserData);
+    }
+  }
+
+  protected onLogout(): void {
+    localStorage.removeItem(Constants.LOGIN_STORAGE_KEY);
+    this.loggedUserData = undefined;
+    this.router.navigate(['/home']);
+  }
 
   protected setTheme(preference: ThemePreference): void {
     this.theme.setPreference(preference);

@@ -2,18 +2,21 @@
   <div class="login-card">
     <h1 class="h4 fw-semibold mb-1">Welcome back</h1>
     <p class="text-muted small mb-4">Log in to continue shopping.</p>
-
-    <form>
+    @if (isLoginFormVisible) {
+    <form (submit)="onLogin()">
       <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" id="email" class="form-control app-input" placeholder="you@example.com" />
+        <label for="mobile" class="form-label">Your Contact number</label>
+        <input type="tel" id="mobile" [(ngModel)]="loginObj.UserName" name="UserName" class="form-control app-input"
+          placeholder="1234567890" pattern="[0-9]{10}" />
       </div>
 
       <div class="mb-2">
         <label for="password" class="form-label">Password</label>
         <div class="input-group">
-          <input type="password" id="password" class="form-control app-input" placeholder="••••••••" />
-          <button type="button" class="btn btn-icon-inline" aria-label="Show password">
+          <input [type]="isShowPassword ? 'text' : 'password'" id="password" [(ngModel)]="loginObj.UserPassword"
+            name="UserPassword" class="form-control app-input" placeholder="••••••••" />
+          <button type="button" class="btn btn-icon-inline" aria-label="Show password"
+            (click)="isShowPassword=!isShowPassword">
             <i class="bi bi-eye"></i>
           </button>
         </div>
@@ -23,18 +26,65 @@
         <a href="#" class="forgot-link small">Forgot password?</a>
       </div>
 
-      <button type="submit" class="btn btn-accent w-100 mb-3">Log In</button>
+      <button type="submit" class="btn btn-accent w-100 mb-3" [disabled]="loginBtnDisabled">Log In</button>
 
       <div class="divider-text my-3">
         <span>or</span>
       </div>
 
-      <button type="button" class="btn btn-outline-accent w-100 mb-4">Continue as Guest</button>
-
-      <p class="text-center text-muted small mb-0">
-        Don't have an account?
-        <a href="#" class="signup-link">Sign up</a>
-      </p>
+      <button type="button" class="btn btn-outline-accent w-100 mb-4" (click)="toggleForm()">Don't have an account? Sign
+        Up</button>
     </form>
+    } @else {
+    <form>
+      <div class="mb-3">
+        <label for="text" class="form-label">Name</label>
+        <input type="text" id="text" [(ngModel)]="registerObj.name" name="Name" class="form-control app-input"
+          placeholder="John Doe" />
+      </div>
+
+      <div class="mb-3">
+        <label for="mobile" class="form-label">Your Contact number</label>
+        <input type="tel" id="mobile" [(ngModel)]="registerObj.mobileNo" name="MobileNo" class="form-control app-input"
+          placeholder="1234567890" pattern="[0-9]{10}" />
+      </div>
+
+      <div class="mb-2">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <input [type]="isShowPassword ? 'text' : 'password'" [(ngModel)]="registerObj.password" name="Password"
+            id="password" class="form-control app-input" placeholder="••••••••" />
+          <button type="button" class="btn btn-icon-inline" aria-label="Show password"
+            (click)="isShowPassword=!isShowPassword">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-accent w-100 mb-3" (click)="onRegister()" [disabled]="registerBtnDisabled">
+        Create Account
+      </button>
+
+      <div class="divider-text my-3">
+        <span>or</span>
+      </div>
+
+      <button type="button" class="btn btn-outline-accent w-100 mb-4" (click)="toggleForm()">Already have an account?
+        Log In</button>
+
+    </form>
+    }
+  </div>
+
+  <div class="toast-container position-fixed top-0 end-0 p-3 app-toast-container">
+    <div #toastEl class="toast app-toast" [class.text-bg-success]="toastVariant() === 'success'"
+      [class.text-bg-danger]="toastVariant() === 'danger'" role="alert" aria-live="assertive" aria-atomic="true"
+      data-bs-delay="4000">
+      <div class="d-flex">
+        <div class="toast-body">{{ toastMessage() }}</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+          aria-label="Close"></button>
+      </div>
+    </div>
   </div>
 </div>

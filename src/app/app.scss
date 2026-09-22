@@ -97,6 +97,57 @@
       background: transparent;
       color: var(--color-accent);
     }
+
+    &.text-danger:hover,
+    &.text-danger:focus {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: var(--color-danger);
+    }
+  }
+
+  .account-dropdown-header {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+  }
+}
+
+.avatar-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  color: #141416;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.account-trigger {
+  color: var(--color-text);
+  padding: 0.4rem 0.6rem;
+  border-radius: 999px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.account-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.account-mobile-item {
+  padding: 0.5rem 0;
+
+  .account-logoff-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-danger);
   }
 }
 
