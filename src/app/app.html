@@ -59,11 +59,8 @@
         <span>Login</span>
       </a>
       } @else {
-      <!--
-              Logged-in state: UI only, not wired to real auth state.
-              Swap the block above for this one (or gate both behind @if) once
-              the logged-in signal/service is in place.
-            -->
+      <!-- Logged-in state: UI only, not wired to real auth state. Swap the block above for this one (or gate both behind @if) once the logged-in signal/service is in place.
+      -->
       <div class="dropdown d-none d-md-inline-flex">
         <button type="button" class="btn account-trigger d-flex align-items-center gap-2" data-bs-toggle="dropdown"
           aria-expanded="false" aria-label="Account menu">
@@ -92,6 +89,7 @@
       </div>
       }
 
+      @if (loggedUserData) {
       <button type="button" class="btn btn-icon position-relative" data-bs-toggle="offcanvas"
         data-bs-target="#cartDrawer" aria-controls="cartDrawer" aria-label="Open cart">
         <i class="bi bi-cart3 fs-5"></i>
@@ -102,6 +100,7 @@
         </span>
         }
       </button>
+      }
     </div>
   </div>
 </nav>
@@ -172,31 +171,37 @@
 </div>
 
 <!-- Cart drawer -->
+
 <div class="offcanvas offcanvas-end app-offcanvas" tabindex="-1" id="cartDrawer">
   <div class="offcanvas-header">
     <span class="offcanvas-title fw-semibold">Your Cart ({{ cartItemCount() }} items)</span>
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
   </div>
   <div class="offcanvas-body d-flex flex-column">
-    @if (cartItems().length > 0) {
+    @if (cartList().length > 0) {
     <div class="flex-grow-1 overflow-auto d-flex flex-column gap-3">
-      @for (item of cartItems(); track item.id) {
+      @for (item of cartList(); track item.productId) {
       <div class="d-flex align-items-center gap-3 cart-line">
         <div class="cart-thumb d-flex align-items-center justify-content-center">
-          <i class="bi bi-image text-muted"></i>
+          @if (item?.productImageUrl?.length > 0) {
+          <img [src]="item?.productImageUrl" alt="{{ item?.productName }}" class="img-fluid" />
+          }
+          @else {
+          <i class="bi bi-image fs-2 text-muted"></i>
+          }
         </div>
         <div class="flex-grow-1">
-          <div class="fw-medium">{{ item.name }}</div>
-          <div class="text-muted small">${{ item.price }}</div>
+          <div class="fw-medium">{{ item.productName }}</div>
+          <div class="text-muted small">${{ item.productPrice }}</div>
           <div class="d-flex align-items-center gap-2 mt-1 qty-stepper">
-            <button type="button" class="btn-step">−</button>
-            <span>{{ item.qty }}</span>
-            <button type="button" class="btn-step">+</button>
+            <!-- <button type="button" class="btn-step">−</button> -->
+            <span>{{ item.quantity }}</span>
+            <!-- <button type="button" class="btn-step">+</button> -->
           </div>
         </div>
         <div class="text-end">
-          <div class="fw-semibold">${{ item.price * item.qty }}</div>
-          <button type="button" class="btn btn-link btn-sm text-danger p-0 mt-1">
+          <div class="fw-semibold">${{ item.productPrice * item.quantity }}</div>
+          <button type="button" class="btn btn-link btn-sm text-danger p-0 mt-1" (click)="onDeleteItemFromCart(item)">
             <i class="bi bi-trash"></i>
           </button>
         </div>
@@ -237,3 +242,16 @@
   <app-footer />
   }
 </main>
+
+<!-- Global toast host: any component can call inject(Toast).show(message, variant) -->
+<div class="toast-container position-fixed top-0 end-0 p-3 app-toast-container">
+  <div #toastEl class="toast app-toast" [class.text-bg-success]="toast.variant() === 'success'"
+    [class.text-bg-danger]="toast.variant() === 'danger'" role="alert" aria-live="assertive" aria-atomic="true"
+    data-bs-delay="4000">
+    <div class="d-flex">
+      <div class="toast-body">{{ toast.message() }}</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+        aria-label="Close"></button>
+    </div>
+  </div>
+</div>

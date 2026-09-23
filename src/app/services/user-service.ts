@@ -12,6 +12,19 @@ import { ApiResponseModel } from '../models/api-response-model';
 export class UserService {
   http = inject(HttpClient);
   onLogin$: Subject<void> = new Subject<void>();
+  onAddToCart$: Subject<void> = new Subject<void>();
+  loggedUserData: IRegisterModel | undefined;
+
+  constructor() {
+    this.readLoggedData();
+  }
+
+  public readLoggedData(): void {
+    const loggedUserData = localStorage.getItem(Constants.LOGIN_STORAGE_KEY);
+    if (loggedUserData) {
+      this.loggedUserData = JSON.parse(loggedUserData);
+    }
+  }
 
   onRegister(userDetail: IRegisterModel): Observable<ApiResponseModel> {
     return this.http.post<ApiResponseModel>(

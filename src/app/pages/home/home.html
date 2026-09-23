@@ -41,10 +41,10 @@
         }
         @else {
         <i class="bi bi-image fs-2 text-muted"></i>
-
         }
-        <button type="button" class="quick-add-btn" aria-label="Add to cart"
-          (click)="$event.stopPropagation(); $event.preventDefault()">
+        <button type="button" class="quick-add-btn" aria-label="Add to cart" data-bs-toggle="modal"
+          data-bs-target="#addToCartModal"
+          (click)="$event.stopPropagation(); $event.preventDefault(); onAddToCart(product)">
           <i class="bi bi-cart-plus"></i>
         </button>
       </div>
@@ -62,3 +62,61 @@
     }
   </div>
 </section>
+
+<!--
+  Add to Cart modal: UI only, static example content, not wired to a real
+  product/quantity yet. Bind the thumbnail/name/stock/price/quantity and the
+  "Add to Cart" click handler to whichever product opened it.
+-->
+<div class="modal fade" id="addToCartModal" tabindex="-1" aria-labelledby="addToCartModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content app-modal">
+      <div class="modal-header">
+        <h2 class="modal-title h5 fw-semibold" id="addToCartModalLabel">Add to Cart</h2>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="d-flex gap-3 mb-4">
+          <div class="cart-modal-thumb d-flex align-items-center justify-content-center">
+            @if (selectedProduct?.productImageUrl?.length > 0) {
+            <img [src]="selectedProduct?.productImageUrl" alt="{{ selectedProduct?.productName }}" class="img-fluid" />
+            }
+            @else {
+            <i class="bi bi-image fs-2 text-muted"></i>
+            }
+          </div>
+          <div>
+            <div class="fw-semibold">{{selectedProduct?.productName}}</div>
+            <div class="text-muted small">{{selectedProduct?.productSku}}</div>
+            <div class="text-muted small">{{selectedProduct?.productDescription}}</div>
+          </div>
+          <div class="fw-bold text-white fs-5 ms-auto">${{selectedProduct?.productPrice}}</div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="fw-medium">Quantity</span>
+          <div class="qty-stepper d-flex align-items-center gap-3">
+            <button type="button" (click)="cartObj.quantity = cartObj.quantity - 1" class="btn-step"
+              aria-label="Decrease quantity">&minus;</button>
+            <span class="qty-value">{{ cartObj.quantity }}</span>
+            <button type="button" (click)="cartObj.quantity = cartObj.quantity + 1" class="btn-step"
+              aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center line-total-row pt-3">
+          <span class="fw-semibold">Line total</span>
+          <span class="fw-bold fs-5">{{ cartObj.quantity * (selectedProduct?.productPrice ?? 0) | currency:'USD':true
+            }}</span>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-accent w-100 add-to-cart-confirm-btn" (click)="saveCartData()"
+          [disabled]="isAddToCartDisable">Add to
+          Cart</button>
+      </div>
+    </div>
+  </div>
+</div>

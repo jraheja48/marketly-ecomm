@@ -4,7 +4,7 @@ import { environment } from '@src/environments/environment.development';
 import { Constants } from '@src/app/constants/Constanct';
 import { map, Observable } from 'rxjs';
 import { ApiResponseModel } from '../models/api-response-model';
-import { ICategory } from '../models/product-model';
+import { ICartItem, ICategory, IOrder } from '../models/product-model';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +39,38 @@ export class Product {
   filterProductByCategory(id: number): Observable<ApiResponseModel> {
     return this.http.get<ApiResponseModel>(
       environment.API_URL + Constants.API_END_POINTS.FILTER_PRODUCT_BY_CAT_ID + id,
+    );
+  }
+
+  addToCart(cartItem: ICartItem): Observable<ApiResponseModel> {
+    return this.http.post<ApiResponseModel>(
+      environment.API_URL + Constants.API_END_POINTS.ADD_TO_CART,
+      cartItem,
+    );
+  }
+
+  getCartsByCustId(custId: number): Observable<ApiResponseModel> {
+    return this.http.get<ApiResponseModel>(
+      environment.API_URL + Constants.API_END_POINTS.GET_CART_ITEM_BY_CUST_ID + custId,
+    );
+  }
+
+  DeleteProductFromCartById(cartID: number): Observable<ApiResponseModel> {
+    return this.http.get<ApiResponseModel>(
+      environment.API_URL + Constants.API_END_POINTS.DELETE_PRODUCT_FROM_CART + cartID,
+    );
+  }
+
+  placeOrder(orderObj: IOrder): Observable<ApiResponseModel> {
+    return this.http.post<ApiResponseModel>(
+      environment.API_URL + Constants.API_END_POINTS.PLACE_ORDER,
+      orderObj,
+    );
+  }
+
+  cancelOrder(salesID: number): Observable<ApiResponseModel> {
+    return this.http.get<ApiResponseModel>(
+      environment.API_URL + Constants.API_END_POINTS.CANCEL_ORDER + '?saleId=' + salesID,
     );
   }
 }

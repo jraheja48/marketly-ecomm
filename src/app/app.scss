@@ -267,3 +267,19 @@
   border-color: var(--color-accent);
   color: var(--color-accent);
 }
+
+.app-toast-container {
+  // Sit below the fixed navbar (64px tall) and above offcanvas/dropdowns/modal.
+  top: 80px !important;
+  z-index: 1080;
+}
+
+.app-toast.text-bg-success {
+  background-color: var(--color-accent-alt);
+  color: #0f1f16;
+}
+
+.app-toast.text-bg-danger {
+  background-color: var(--color-danger);
+  color: #fff;
+}

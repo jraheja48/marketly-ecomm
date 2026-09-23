@@ -1,20 +1,25 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { Footer } from './shared/footer/footer';
 import { Theme, ThemePreference } from './core/theme';
+import { Toast } from './core/toast';
 import { IRegisterModel } from './models/user-model';
 import { Constants } from './constants/Constanct';
 import { UserService } from './services/user-service';
 import { AvatarTransformPipe } from './pipes/avatar-transform-pipe';
-
-interface CartLineItem {
-  id: number;
-  name: string;
-  price: number;
-  qty: number;
-}
+import { Product } from './services/product';
+import { ICartList } from './models/product-model';
+import { ApiResponseModel } from './models/api-response-model';
 
 const FOOTERLESS_ROUTES = ['/login', '/checkout'];
 
@@ -24,26 +29,26 @@ const FOOTERLESS_ROUTES = ['/login', '/checkout'];
   styleUrl: './app.scss',
   templateUrl: './app.html',
 })
-export class App {
+export class App implements AfterViewInit {
+  @ViewChild('toastEl') private toastElRef!: ElementRef<HTMLElement>;
+
   protected readonly theme = inject(Theme);
+  protected readonly toast = inject(Toast);
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
+  private readonly productService = inject(Product);
 
   public loggedUserData!: IRegisterModel | undefined;
 
+  protected readonly cartList = signal<ICartList[]>([]);
   protected readonly searchTerm = signal('');
 
-  protected readonly cartItems = signal<CartLineItem[]>([
-    { id: 1, name: 'Wireless Headphones', price: 79, qty: 1 },
-    { id: 2, name: 'Canvas Backpack', price: 45, qty: 2 },
-  ]);
-
   protected readonly cartItemCount = computed(() =>
-    this.cartItems().reduce((total, item) => total + item.qty, 0),
+    this.cartList().reduce((total, item) => total + item.quantity, 0),
   );
 
   protected readonly cartSubtotal = computed(() =>
-    this.cartItems().reduce((total, item) => total + item.price * item.qty, 0),
+    this.cartList().reduce((total, item) => total + item.productPrice * item.quantity, 0),
   );
 
   private readonly currentUrl = toSignal(
@@ -65,22 +70,53 @@ export class App {
   ];
 
   constructor() {
-    this.readLoggedData();
+    this.loggedUserData = this.userService.loggedUserData;
+    this.getCartData();
     this.userService.onLogin$.subscribe(() => {
-      this.readLoggedData();
+      this.loggedUserData = this.userService.loggedUserData;
+      this.getCartData();
+    });
+    this.userService.onAddToCart$.subscribe(() => {
+      this.getCartData();
     });
   }
 
-  protected readLoggedData(): void {
-    const loggedUserData = localStorage.getItem(Constants.LOGIN_STORAGE_KEY);
-    if (loggedUserData) {
-      this.loggedUserData = JSON.parse(loggedUserData);
+  ngAfterViewInit(): void {
+    this.toast.registerElement(this.toastElRef.nativeElement);
+  }
+
+  getCartData(): void {
+    if (this.loggedUserData?.custId) {
+      this.productService.getCartsByCustId(this.loggedUserData?.custId).subscribe({
+        next: (response: ApiResponseModel) => this.cartList.set(response.data || []),
+        error: (error) => {
+          this.cartList.set([]);
+          console.error('Error fetching cart data:', error);
+        },
+      });
     }
+  }
+
+  onDeleteItemFromCart(item: ICartList): void {
+    this.productService.DeleteProductFromCartById(item.cartId).subscribe({
+      next: (response: ApiResponseModel) => {
+        if (response.result) {
+          this.toast.show('Item removed from cart successfully!', 'success');
+          this.getCartData();
+        } else {
+          this.toast.show('Failed to remove item from cart: ' + response.message, 'danger');
+        }
+      },
+      error: (error) => {
+        this.toast.show('An error occurred while removing the item from cart.', 'danger');
+      },
+    });
   }
 
   protected onLogout(): void {
     localStorage.removeItem(Constants.LOGIN_STORAGE_KEY);
     this.loggedUserData = undefined;
+    this.cartList.set([]);
     this.router.navigate(['/home']);
   }
 
