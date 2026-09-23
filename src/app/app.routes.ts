@@ -20,10 +20,10 @@ export const routes: Routes = [
     path: 'login',
     component: Login,
   },
-  {
-    path: 'products',
-    component: ProductList,
-  },
+  // {
+  //   path: 'products',
+  //   component: ProductList,
+  // },
   {
     path: 'open-product/:id',
     component: ProductDetails,

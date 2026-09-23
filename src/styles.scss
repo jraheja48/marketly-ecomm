@@ -112,4 +112,18 @@ a {
     color: #141416;
   }
 }
+
+// Shared dark-surface modal chrome, used by any modal regardless of which
+// component's template hosts it (view encapsulation means a component-scoped
+// definition wouldn't apply to another component's modal markup).
+.app-modal {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+
+  .modal-header,
+  .modal-footer {
+    border-color: var(--color-border);
+  }
+}
 /* You can add global styles to this file, and also import other style files */

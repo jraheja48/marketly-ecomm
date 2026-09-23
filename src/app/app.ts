@@ -11,6 +11,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { Footer } from './shared/footer/footer';
+import { Cookie } from './core/cookie';
 import { Theme, ThemePreference } from './core/theme';
 import { Toast } from './core/toast';
 import { IRegisterModel } from './models/user-model';
@@ -21,7 +22,13 @@ import { Product } from './services/product';
 import { ICartList } from './models/product-model';
 import { ApiResponseModel } from './models/api-response-model';
 
+// bootstrap.bundle.min.js is loaded globally (see angular.json "scripts"),
+// the same script that already drives the navbar's offcanvas/dropdown —
+// this just gives TypeScript a type for the global it exposes.
+declare const bootstrap: any;
+
 const FOOTERLESS_ROUTES = ['/login', '/checkout'];
+const DISCLAIMER_COOKIE = 'marketly-disclaimer-ack';
 
 @Component({
   imports: [RouterOutlet, RouterLink, RouterLinkActive, Footer, AvatarTransformPipe],
@@ -31,9 +38,11 @@ const FOOTERLESS_ROUTES = ['/login', '/checkout'];
 })
 export class App implements AfterViewInit {
   @ViewChild('toastEl') private toastElRef!: ElementRef<HTMLElement>;
+  @ViewChild('disclaimerModalEl') private disclaimerModalElRef!: ElementRef<HTMLElement>;
 
   protected readonly theme = inject(Theme);
   protected readonly toast = inject(Toast);
+  private readonly cookie = inject(Cookie);
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
   private readonly productService = inject(Product);
@@ -86,6 +95,18 @@ export class App implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.toast.registerElement(this.toastElRef.nativeElement);
+
+    if (!this.cookie.get(DISCLAIMER_COOKIE)) {
+      bootstrap.Modal.getOrCreateInstance(this.disclaimerModalElRef.nativeElement, {
+        backdrop: 'static',
+        keyboard: false,
+      }).show();
+    }
+  }
+
+  protected onAcknowledgeDisclaimer(): void {
+    this.cookie.set(DISCLAIMER_COOKIE, 'true', 365);
+    bootstrap.Modal.getOrCreateInstance(this.disclaimerModalElRef.nativeElement).hide();
   }
 
   getCartData(): void {

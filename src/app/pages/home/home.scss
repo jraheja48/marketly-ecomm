@@ -136,17 +136,6 @@
   }
 }
 
-.app-modal {
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-
-  .modal-header,
-  .modal-footer {
-    border-color: var(--color-border);
-  }
-}
-
 .cart-modal-thumb {
   flex-shrink: 0;
   width: 72px;

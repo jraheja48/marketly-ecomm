@@ -255,3 +255,32 @@
     </div>
   </div>
 </div>
+
+<!-- First-visit disclaimer: shown once until acknowledged (tracked via a cookie),
+     not dismissible via backdrop click/Escape so it can't be skipped accidentally. -->
+<div #disclaimerModalEl class="modal fade" tabindex="-1" aria-labelledby="disclaimerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content app-modal">
+      <div class="modal-header">
+        <h2 class="modal-title h5 fw-semibold" id="disclaimerModalLabel">
+          <i class="bi bi-info-circle-fill text-warning me-2"></i>Demo Application Notice
+        </h2>
+      </div>
+      <div class="modal-body">
+        <p class="mb-2">
+          Marketly is a <strong>demo application</strong> built for portfolio and learning purposes only. It is not
+          a real store.
+        </p>
+        <p class="mb-0 text-muted small">
+          No real products are sold and no real payments are processed. Please avoid entering any sensitive personal
+          information, including real passwords.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-accent w-100" (click)="onAcknowledgeDisclaimer()">
+          I Understand, Continue
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
