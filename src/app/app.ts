@@ -79,6 +79,9 @@ export class App implements AfterViewInit {
     this.userService.onAddToCart$.subscribe(() => {
       this.getCartData();
     });
+    this.userService.onOrderPlaced$.subscribe(() => {
+      this.cartList.set([]);
+    });
   }
 
   ngAfterViewInit(): void {

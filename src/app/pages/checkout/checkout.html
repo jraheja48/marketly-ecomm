@@ -1,77 +1,96 @@
 <div class="checkout-page">
   <h1 class="h3 fw-bold mb-3">Checkout</h1>
 
-  <!-- Step indicator: Cart (done) -> Delivery Details (active) -> Confirmation (upcoming) -->
+  <!-- Step indicator: Cart (done) -> Delivery Details -> Confirmation. The last
+       two steps advance once the order has actually been placed. -->
   <ol class="checkout-steps d-flex align-items-center list-unstyled mb-4">
     <li class="step step-done d-flex align-items-center gap-2">
       <span class="step-circle"><i class="bi bi-check-lg"></i></span>
       <span class="step-label">Cart</span>
     </li>
     <li class="step-connector step-connector-done"></li>
-    <li class="step step-active d-flex align-items-center gap-2">
-      <span class="step-circle">2</span>
+    <li class="step d-flex align-items-center gap-2" [class.step-done]="orderPlaced()"
+      [class.step-active]="!orderPlaced()">
+      <span class="step-circle">
+        @if (orderPlaced()) {
+        <i class="bi bi-check-lg"></i>
+        } @else { 2 }
+      </span>
       <span class="step-label">Delivery Details</span>
     </li>
-    <li class="step-connector"></li>
-    <li class="step d-flex align-items-center gap-2">
+    <li class="step-connector" [class.step-connector-done]="orderPlaced()"></li>
+    <li class="step d-flex align-items-center gap-2" [class.step-active]="orderPlaced()">
       <span class="step-circle">3</span>
       <span class="step-label">Confirmation</span>
     </li>
   </ol>
 
+  @if (orderPlaced()) {
+  <div class="order-success text-center py-5">
+    <i class="fa-solid fa-circle-check order-success-icon"></i>
+    <h2 class="h4 fw-bold mt-3 mb-2">Order placed successfully!</h2>
+    <p class="text-muted mb-0">We&rsquo;ve received your order and will get it ready for delivery.</p>
+    <div class="d-flex justify-content-center gap-3 mt-4">
+      <a routerLink="/home" class="btn btn-outline-accent">Return to Home</a>
+      <a routerLink="/my-orders" class="btn btn-accent">My Orders</a>
+    </div>
+  </div>
+  } @else {
   <div class="row g-4">
     <!-- Left column: delivery address + payment note -->
     <div class="col-lg-8">
-      <section class="checkout-section">
-        <h2 class="section-title d-flex align-items-center gap-2">
-          <i class="bi bi-geo-alt-fill section-icon"></i>
-          Delivery Address
-        </h2>
-        <div class="row g-3">
-          <div class="col-12">
-            <label for="deliveryAddress1" class="form-label">Address Line 1</label>
-            <input type="text" id="deliveryAddress1" name="DeliveryAddress1" class="form-control app-input"
-              placeholder="House no., building, street" />
+      <form [formGroup]="orderForm">
+        <section class="checkout-section">
+          <h2 class="section-title d-flex align-items-center gap-2">
+            <i class="bi bi-geo-alt-fill section-icon"></i>
+            Delivery Address
+          </h2>
+          <div class="row g-3">
+            <div class="col-12">
+              <label for="deliveryAddress1" class="form-label">Address Line 1</label>
+              <input type="text" id="deliveryAddress1" formControlName="deliveryAddress1"
+                class="form-control app-input" placeholder="House no., building, street" />
+            </div>
+            <div class="col-12">
+              <label for="deliveryAddress2" class="form-label">Address Line 2 (optional)</label>
+              <input type="text" id="deliveryAddress2" formControlName="deliveryAddress2"
+                class="form-control app-input" placeholder="Area, colony" />
+            </div>
+            <div class="col-md-8">
+              <label for="deliveryCity" class="form-label">City</label>
+              <input type="text" id="deliveryCity" formControlName="deliveryCity" class="form-control app-input"
+                placeholder="City" />
+            </div>
+            <div class="col-md-4">
+              <label for="deliveryPinCode" class="form-label">PIN Code</label>
+              <input type="text" id="deliveryPinCode" formControlName="deliveryPinCode"
+                class="form-control app-input" placeholder="411045" inputmode="numeric" />
+            </div>
+            <div class="col-12">
+              <label for="deliveryLandMark" class="form-label">Landmark (optional)</label>
+              <input type="text" id="deliveryLandMark" formControlName="deliveryLandMark"
+                class="form-control app-input" placeholder="Nearby landmark" />
+            </div>
           </div>
-          <div class="col-12">
-            <label for="deliveryAddress2" class="form-label">Address Line 2 (optional)</label>
-            <input type="text" id="deliveryAddress2" name="DeliveryAddress2" class="form-control app-input"
-              placeholder="Area, colony" />
-          </div>
-          <div class="col-md-8">
-            <label for="deliveryCity" class="form-label">City</label>
-            <input type="text" id="deliveryCity" name="DeliveryCity" class="form-control app-input"
-              placeholder="City" />
-          </div>
-          <div class="col-md-4">
-            <label for="deliveryPinCode" class="form-label">PIN Code</label>
-            <input type="text" id="deliveryPinCode" name="DeliveryPinCode" class="form-control app-input"
-              placeholder="411045" inputmode="numeric" />
-          </div>
-          <div class="col-12">
-            <label for="deliveryLandMark" class="form-label">Landmark (optional)</label>
-            <input type="text" id="deliveryLandMark" name="DeliveryLandMark" class="form-control app-input"
-              placeholder="Nearby landmark" />
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section class="checkout-section">
-        <h2 class="section-title d-flex align-items-center gap-2">
-          <i class="bi bi-chat-square-text-fill section-icon"></i>
-          Payment Note
-        </h2>
-        <p class="text-muted small mb-3">
-          This is a demo checkout &mdash; no payment is actually processed. Add any note for this order below.
-        </p>
-        <div class="row g-3">
-          <div class="col-12">
-            <label for="paymentNaration" class="form-label">Payment Narration (optional)</label>
-            <textarea id="paymentNaration" name="PaymentNaration" class="form-control app-input" rows="3"
-              placeholder="e.g. Cash on delivery, UPI reference, gift note..."></textarea>
+        <section class="checkout-section">
+          <h2 class="section-title d-flex align-items-center gap-2">
+            <i class="bi bi-chat-square-text-fill section-icon"></i>
+            Payment Note
+          </h2>
+          <p class="text-muted small mb-3">
+            This is a demo checkout &mdash; no payment is actually processed. Add any note for this order below.
+          </p>
+          <div class="row g-3">
+            <div class="col-12">
+              <label for="paymentNaration" class="form-label">Payment Narration (optional)</label>
+              <textarea id="paymentNaration" formControlName="paymentNaration" class="form-control app-input"
+                rows="3" placeholder="e.g. Cash on delivery, UPI reference, gift note..."></textarea>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </form>
     </div>
 
     <!-- Right column: order summary -->
@@ -122,11 +141,13 @@
             currency:'USD':'symbol':'1.0-0' }}</span>
         </div>
 
-        <button type="button" class="btn btn-accent w-100 place-order-btn">Place Order</button>
+        <button type="button" class="btn btn-accent w-100 place-order-btn" (click)="onPlaceOrder()">Place
+          Order</button>
         <p class="demo-note text-muted small mb-0">
           <i class="bi bi-info-circle"></i> Demo checkout &mdash; no real payment is taken.
         </p>
       </section>
     </div>
   </div>
+  }
 </div>

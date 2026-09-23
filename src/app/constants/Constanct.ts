@@ -11,6 +11,6 @@ export const Constants = {
     PLACE_ORDER: '/PlaceOrder',
     CANCEL_ORDER: '/cancelOrder',
   },
-
+  DISCOUNT_PRCT: 10,
   LOGIN_STORAGE_KEY: 'loggedUserData',
 };

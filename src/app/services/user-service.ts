@@ -13,6 +13,7 @@ export class UserService {
   http = inject(HttpClient);
   onLogin$: Subject<void> = new Subject<void>();
   onAddToCart$: Subject<void> = new Subject<void>();
+  onOrderPlaced$: Subject<void> = new Subject<void>();
   loggedUserData: IRegisterModel | undefined;
 
   constructor() {
