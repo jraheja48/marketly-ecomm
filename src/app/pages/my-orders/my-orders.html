@@ -1,52 +1,63 @@
 <div class="container my-orders-page">
   <h1 class="h4 fw-semibold mb-4">My Orders</h1>
 
-  @if (orders.length > 0) {
-    <div class="d-flex flex-column gap-3">
-      @for (order of orders; track order.id) {
-        <div class="order-card">
-          <button type="button" class="order-summary-row" (click)="toggleOrder(order.id)">
-            <div class="order-thumbs">
-              @for (i of [0, 1, 2]; track i) {
-                @if (i < order.itemCount) {
-                  <div class="order-thumb"><i class="bi bi-image text-muted"></i></div>
-                }
-              }
-            </div>
-
-            <div class="order-meta">
-              <div class="order-id">{{ order.id }}</div>
-              <div class="order-date text-muted small">{{ order.date }}</div>
-            </div>
-
-            <span class="status-badge" [class]="statusClass(order.status)">
-              {{ order.status }}
-            </span>
-
-            <div class="order-total">${{ order.total }}</div>
-
-            <i
-              class="bi bi-chevron-down chevron"
-              [class.chevron-open]="expandedOrderId() === order.id"
-            ></i>
-          </button>
-
-          @if (expandedOrderId() === order.id) {
-            <div class="order-details">
-              <div class="text-muted small mb-2">
-                {{ order.itemCount }} item(s) &middot; Shipping to 221B Baker Street
-              </div>
-              <a href="#" class="tracking-link small">Track shipment</a>
-            </div>
-          }
+  @if (orders().length > 0) {
+  <div class="d-flex flex-column gap-3">
+    @for (order of orders(); track order.saleId) {
+    <div class="order-card">
+      <button type="button" class="order-summary-row" (click)="toggleOrder(order.saleId)">
+        <div class="order-thumbs">
+          <div class="order-thumb"><i class="bi bi-bag-check text-muted"></i></div>
         </div>
+
+        <div class="order-meta">
+          <div class="order-id">Order #{{ order.saleId }}</div>
+          <div class="order-date text-muted small">{{ order.saleDate | date:'mediumDate' }}</div>
+        </div>
+
+        <span class="status-badge" [class]="statusClass(orderStatus(order))">
+          {{ orderStatus(order) }}
+        </span>
+
+        <div class="order-total">{{ order.totalInvoiceAmount | currency:'USD':'symbol':'1.0-0' }}</div>
+
+        <i class="bi bi-chevron-down chevron" [class.chevron-open]="expandedOrderId() === order.saleId"></i>
+      </button>
+
+      @if (expandedOrderId() === order.saleId) {
+      <div class="order-details">
+        <div class="text-muted small mb-2">Shipping to {{ formatAddress(order) }}</div>
+
+        @if (order.deliveryLandMark) {
+        <div class="text-muted small mb-2">Landmark: {{ order.deliveryLandMark }}</div>
+        }
+
+        @if (order.discount) {
+        <div class="text-muted small mb-2">
+          Discount applied: {{ order.discount | currency:'USD':'symbol':'1.0-0' }}
+        </div>
+        }
+
+        @if (order.paymentNaration) {
+        <div class="text-muted small mb-2">Note: {{ order.paymentNaration }}</div>
+        }
+
+        @if (canCancel(order)) {
+        <button type="button" class="btn btn-outline-danger btn-sm cancel-order-btn"
+          (click)="onCancelOrder(order, $event)" [disabled]="cancellingOrderId() === order.saleId">
+          {{ cancellingOrderId() === order.saleId ? 'Cancelling…' : 'Cancel Order' }}
+        </button>
+        }
+      </div>
       }
     </div>
+    }
+  </div>
   } @else {
-    <div class="empty-orders text-center">
-      <i class="bi bi-bag fs-1 text-muted mb-3 d-block"></i>
-      <p class="text-muted mb-3">You haven't placed any orders yet</p>
-      <a routerLink="/products" class="btn btn-accent px-4">Start Shopping</a>
-    </div>
+  <div class="empty-orders text-center">
+    <i class="bi bi-bag fs-1 text-muted mb-3 d-block"></i>
+    <p class="text-muted mb-3">You haven't placed any orders yet</p>
+    <a routerLink="/home" class="btn btn-accent px-4">Start Shopping</a>
+  </div>
   }
 </div>

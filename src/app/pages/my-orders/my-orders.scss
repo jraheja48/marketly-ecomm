@@ -65,11 +65,6 @@
   color: var(--color-accent-alt);
 }
 
-.status-transit {
-  background-color: rgba(var(--color-accent-rgb), 0.15);
-  color: var(--color-accent);
-}
-
 .status-cancelled {
   background-color: rgba(239, 68, 68, 0.15);
   color: var(--color-danger);
@@ -96,8 +91,8 @@
   padding-top: 0.75rem;
 }
 
-.tracking-link {
-  color: var(--color-accent);
+.cancel-order-btn {
+  margin-top: 0.25rem;
 }
 
 .empty-orders {

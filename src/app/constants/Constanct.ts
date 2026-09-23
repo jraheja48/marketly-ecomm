@@ -10,6 +10,7 @@ export const Constants = {
     DELETE_PRODUCT_FROM_CART: '/DeleteProductFromCartById?id=',
     PLACE_ORDER: '/PlaceOrder',
     CANCEL_ORDER: '/cancelOrder',
+    GET_ALL_ORDER_BY_CUST_ID: '/GetAllSaleByCustomerId?id=',
   },
   DISCOUNT_PRCT: 10,
   LOGIN_STORAGE_KEY: 'loggedUserData',

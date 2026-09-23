@@ -1,40 +1,92 @@
-import { Component, signal } from '@angular/core';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Toast } from '@src/app/core/toast';
+import { ApiResponseModel } from '@src/app/models/api-response-model';
+import { IOrder } from '@src/app/models/product-model';
+import { Product } from '@src/app/services/product';
+import { UserService } from '@src/app/services/user-service';
 
-type OrderStatus = 'Delivered' | 'In Transit' | 'Cancelled';
-
-interface Order {
-  id: string;
-  date: string;
-  status: OrderStatus;
-  total: number;
-  itemCount: number;
-}
+type OrderStatus = 'Placed' | 'Cancelled';
 
 @Component({
-  imports: [RouterLink],
+  imports: [RouterLink, CurrencyPipe, DatePipe],
   selector: 'app-my-orders',
   styleUrl: './my-orders.scss',
   templateUrl: './my-orders.html',
 })
 export class MyOrders {
-  protected readonly orders: Order[] = [
-    { id: '#10234', date: 'Sep 12, 2026', status: 'Delivered', total: 158, itemCount: 3 },
-    { id: '#10198', date: 'Aug 30, 2026', status: 'In Transit', total: 79, itemCount: 1 },
-    { id: '#10142', date: 'Aug 04, 2026', status: 'Cancelled', total: 45, itemCount: 1 },
-  ];
+  userSrv = inject(UserService);
+  productSrv = inject(Product);
+  private readonly toast = inject(Toast);
 
-  protected readonly expandedOrderId = signal<string | null>(null);
+  protected readonly orders = signal<IOrder[]>([]);
+  protected readonly expandedOrderId = signal<number | null>(null);
+  protected readonly cancellingOrderId = signal<number | null>(null);
 
-  protected toggleOrder(id: string): void {
-    this.expandedOrderId.update((current) => (current === id ? null : id));
+  constructor() {
+    if (this.userSrv.loggedUserData?.custId) {
+      this.productSrv
+        .getAllOrderByCustId(this.userSrv.loggedUserData.custId)
+        .subscribe((res: ApiResponseModel) => {
+          this.orders.set(res.data || []);
+        });
+    }
+  }
+
+  protected toggleOrder(saleId: number): void {
+    this.expandedOrderId.update((current) => (current === saleId ? null : saleId));
+  }
+
+  protected orderStatus(order: IOrder): OrderStatus {
+    return order.isCanceled ? 'Cancelled' : 'Placed';
   }
 
   protected statusClass(status: OrderStatus): string {
     return {
-      Delivered: 'status-delivered',
-      'In Transit': 'status-transit',
+      Placed: 'status-delivered',
       Cancelled: 'status-cancelled',
     }[status];
+  }
+
+  protected formatAddress(order: IOrder): string {
+    return [
+      order.deliveryAddress1,
+      order.deliveryAddress2,
+      order.deliveryCity,
+      order.deliveryPinCode,
+    ]
+      .filter((part) => !!part)
+      .join(', ');
+  }
+
+  protected canCancel(order: IOrder): boolean {
+    return !order.isCanceled;
+  }
+
+  protected onCancelOrder(order: IOrder, event: Event): void {
+    event.stopPropagation();
+    this.cancellingOrderId.set(order.saleId);
+    this.productSrv.cancelOrder(order.saleId).subscribe({
+      next: (response: ApiResponseModel) => {
+        this.cancellingOrderId.set(null);
+        if (response.result) {
+          this.orders.update((orders) =>
+            orders.map((o) => (o.saleId === order.saleId ? { ...o, isCanceled: true } : o)),
+          );
+          this.toast.show('Order cancelled successfully.', 'success');
+        } else {
+          this.toast.show('Failed to cancel order: ' + response.message, 'danger');
+        }
+      },
+      error: (error) => {
+        this.cancellingOrderId.set(null);
+        console.error('Error cancelling order:', error);
+        this.toast.show(
+          'Something went wrong while cancelling your order. Please try again.',
+          'danger',
+        );
+      },
+    });
   }
 }

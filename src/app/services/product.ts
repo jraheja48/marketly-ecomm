@@ -73,4 +73,10 @@ export class Product {
       environment.API_URL + Constants.API_END_POINTS.CANCEL_ORDER + '?saleId=' + salesID,
     );
   }
+
+  getAllOrderByCustId(custId: number): Observable<ApiResponseModel> {
+    return this.http.get<ApiResponseModel>(
+      environment.API_URL + Constants.API_END_POINTS.GET_ALL_ORDER_BY_CUST_ID + custId,
+    );
+  }
 }
